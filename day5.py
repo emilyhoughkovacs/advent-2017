@@ -5,29 +5,40 @@ logger = logging.getLogger()
 
 def get_input():
   with open("inputday5.txt", "r") as f:
-    return file.readlines()
+    return f.readlines()
 
-def worker(row, pt2=False):
-  # do work here
-  # return a true or false if possible
+def worker(i, myList, pt2=False):
+  if pt2 is True and myList[i] > 2:
+    cur = i
+    i = myList[i] + i
+    myList[cur] -= 1
+  else:
+    cur = i
+    i = myList[i]+i
+    myList[cur] += 1
+  return i, myList
 
 def test():
-  assert worker("test1") is True
-  assert worker("test2") is True
-  assert worker("test3") is True
-  assert worker("test4") is True
-  assert worker("test5", pt2=True) is True
-  assert worker("test6", pt2=True) is True
-  assert worker("test7", pt2=True) is True
-  assert worker("test8", pt2=True) is True
+  assert worker(0, [0, 3, 0, 1, -3]) == (0, [1, 3, 0, 1, -3])
+  assert worker(0, [1,3,0 , 1 , -3]) == (1, [2,3,0 , 1 , -3])
+  assert worker(1, [2, 3, 0 , 1 , -3]) == (4, [2, 4, 0, 1, -3])
+  assert worker(4, [2, 4, 0, 1, -3]) == (1, [2, 4, 0, 1, -2])
+  assert worker(1, [2, 4, 0, 1, -2]) == (5, [2, 5, 0, 1, -2])
+  return True
 
 def main():
   input = get_input()
+  input = [int(x) for x in input]
+  # input = [0, 3, 0, 1, -3]
+  steps = 0
+  index = 0
+  while index in range(len(input)):
+    index, input = worker(index, myList=input, pt2=True)
+    steps += 1
+    # print index
 
-  ## do work on each line of input here
-  ## e.g. "how many rows of input are this"
-  ## valid = sum([1 for row in input if isValid(row)])
-  ## logger.info("Result: %s" % valid)
+  print steps
+  # print input
 
 if __name__ == "__main__":
   if test():
