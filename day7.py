@@ -1,14 +1,24 @@
 import logging
+import re
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 
 def get_input():
-  with open("inputday6.txt", "r") as f:
-    blah = [x.split() for x in f][0]
-    return [int(x) for x in blah]
+  with open("inputday7.txt", "r") as f:
+    return f.readlines()
 
-def worker(banks, pt2=False):
+def splitLine(row):
+  row = re.findall(r"[\w']+", row)
+  node = row[0]
+  val = int(row[1])
+  if len(row) > 2:
+    children = row[2:]
+  else:
+    children = []
+  return node, val, children
+
+# def worker(banks, pt2=False):
 
 def test():
   # assert worker([0, 2, 7, 0]) == 6
@@ -19,6 +29,27 @@ def test():
 
 def main():
   input = get_input()
+  myDict = {}
+  weight = {}
+  for row in input:
+    x, y, z = splitLine(row)
+    weight[x] = y
+    myDict[x] = z
+  roots = []
+  leaves = []
+  for a, b in myDict.iteritems():
+    for c in b:
+      leaves.append(c)
+    roots.append(a)
+
+  print [x for x in roots if x not in leaves]
+  # roots = list(set(roots))
+  # leaves = list(set(leaves))
+
+  # for b in myDict.values():
+  #   print b
+  # print splitLine(input[3])
+  # print myDict
   # input = [0, 2, 7, 0]
 
   ## do work on each line of input here
