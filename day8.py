@@ -3,37 +3,52 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 
+c = {
+   '==': lambda x,y: x == y,
+   '!=': lambda x,y: x != y,
+   '<': lambda x,y: x<y,
+   '<=': lambda x,y: x<=y,
+   '>': lambda x,y: x>y,
+   '>=': lambda x,y: x>=y,
+   'inc': lambda x,y: x+y,
+   'dec': lambda x,y: x-y
+}
+
 def get_input():
-  with open("inputday7.txt", "r") as f:
+  with open("inputday8.txt", "r") as f:
+  # with open("test.txt", "r") as f:
     return f.readlines()
 
 def splitLine(row):
-  row = row.split()
-  node = row[0]
-  if len(row) > 2 and row[2] == '->':
-    children = row[3:]
-  else:
-    children = []
-  return node, children
+  row = row.split() 
+  var = row[0]
+  sign = row[1]
+  amt = row[2]
+  d = row[4]
+  compare = row[5]
+  val = row[6]
+  return var, sign, int(amt), d, compare, int(val)
 
-# def worker(banks, pt2=False):
+def worker(row, theDict, pt2=False):
+  var, sign, amt, d, compare, val = splitLine(row)
+  if c[compare](theDict[d], val):
+    theDict[var] = c[sign](theDict[var], amt)
+  return theDict
 
 def test():
-  # assert worker([0, 2, 7, 0]) == 6
-  # assert worker("test6", pt2=True) is True
-  # assert worker("test7", pt2=True) is True
-  # assert worker("test8", pt2=True) is True
   return True
 
 def main():
   input = get_input()
-  print splitLine(input[0])
-  # input = [0, 2, 7, 0]
+  input = [x for x in input]
+  myDict = {x.split()[0]:0 for x in input}
+  most = 0
 
-  ## do work on each line of input here
-  ## e.g. "how many rows of input are this"
-  ## valid = sum([1 for row in input if isValid(row)])
-  ## logger.info("Result: %s" % valid)
+  for row in input:
+    myDict = worker(row, myDict)
+    if max(myDict.values()) > most:
+      most = max(myDict.values())
+  print most
 
 if __name__ == "__main__":
   if test():
